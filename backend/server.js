@@ -1,14 +1,32 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
+import cors from 'cors';
+import userRoutes from './routes/userRoutes.js';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
+
+app.use('/api',userRoutes);
+
+app.use(express.static(path.join(__dirname,'../public')));
+
 app.get('/',(req,res)=>{
   res.send("server readyy")
 });
+
 
 app.listen(port,()=>{
   console.log(`server started on port ${port}`);
