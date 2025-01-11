@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -12,6 +14,9 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
+//connect to database
+connectDB();
+
 app.use(cors({
   origin: process.env.FRONTEND_URL,
   credentials: true,
@@ -19,13 +24,19 @@ app.use(cors({
   allowedHeaders: 'Content-Type,Authorization',
 }));
 
+app.use(express.json());  
+app.use(express.urlencoded( { extended: true } ));
+app.use(cookieParser());
+
 app.use('/api',userRoutes);
 
 app.use(express.static(path.join(__dirname,'../public')));
 
+
 app.get('/',(req,res)=>{
   res.send("server readyy")
 });
+
 
 
 app.listen(port,()=>{

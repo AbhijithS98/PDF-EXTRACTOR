@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import { validatePdf, submitPdf } from "../utils/FileHandler";
 import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 
 const FormPdf = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); 
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -36,26 +38,29 @@ const FormPdf = () => {
       setFile(null);
       e.target.reset();
     } catch (uploadError) {
-      setError(uploadError.message);
+      toast.info('Please login, to upload a file!')
+      navigate('/login')
     }
   }
 
   return (
-    <form className="container mt-5" onSubmit={handleSubmit}>
-      <div className="mb-3">
-        <label htmlFor="pdf" className="form-label">
-          Upload PDF:
-        </label>
-        <input
-          type="file"
-          id="pdf"
-          className="form-control"
-          onChange={handleFileChange}
-        />
-      </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button type="submit" className="btn btn-primary w-100">Submit</button>
-    </form> 
+    <div className="row justify-content-center">
+      <form className="col-md-6 col-lg-4 mt-5" onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="pdf" className="form-label">
+            Upload PDF:
+          </label>
+          <input
+            type="file"
+            id="pdf"
+            className="form-control"
+            onChange={handleFileChange}
+          />
+        </div>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit" className="btn btn-primary w-100">Submit</button>
+      </form> 
+    </div>
   )
 }
 

@@ -1,5 +1,5 @@
-import axios from 'axios';
-const backendURL = import.meta.env.VITE_BACKEND_URL;
+import api from "./AxiosInstance.js";
+
 
 export const validatePdf = (file) => {
   if(file && file.type === 'application/pdf') {
@@ -14,8 +14,7 @@ export const submitPdf = async (file) => {
   formData.append('pdf', file);
   
   try {
-    console.log("formdata is: ",formData)
-    const response = await axios.post(`${backendURL}/api/upload`, formData, {
+    const response = await api.post(`/upload`, formData, {
       headers: {
           'Content-Type': 'multipart/form-data',
       },
@@ -24,7 +23,7 @@ export const submitPdf = async (file) => {
 
   } catch (error) {
     console.error('Error submitting the PDF: ',error);
-    throw new Error('Failed to submit the PDF file !')
+    throw new Error(error.response.data.message)
   }
 }
 
