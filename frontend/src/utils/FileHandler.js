@@ -16,7 +16,7 @@ export const submitPdf = async (file) => {
   try {
     const response = await api.post(`/upload`, formData, {
       headers: {
-          'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
   });
   return response.data; 

@@ -10,7 +10,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { userId, name, email, isAuthenticated } = useSelector((state) => state.userAuth);
+  const { userInfo } = useSelector((state) => state.userAuth);
 
   const handleLogout = async(e)=>{
     try{
@@ -60,7 +60,7 @@ const Header = () => {
             </li>
           </ul>
           <ul className="navbar-nav">
-            {isAuthenticated ? (
+            {userInfo ? (
               <li className="nav-item">
                 <button
                   className="btn btn-outline-danger"

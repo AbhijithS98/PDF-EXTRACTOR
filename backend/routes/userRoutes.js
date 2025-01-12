@@ -8,11 +8,11 @@ const router = express.Router();
 router.post('/register',userController.register);
 router.post('/login',userController.login);
 router.post('/logout',userController.logout);
-router.post('/upload',uploadPdf, (req,res) => {
-  res.send({ message: 'File uploaded successfully', file: req.file });
-});
-
-
+router.post('/refresh-token',userController.refreshToken);
+router.post('/upload',verifyUserToken,uploadPdf,userController.uploadPdf);
+// router.post('/upload',verifyUserToken,uploadPdf, (req,res) => {
+//   res.json({ message: 'File uploaded successfully', file: req.file });
+// });
 
 
 export default router;

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import api from '../utils/AxiosInstance.js';
-// import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../redux/slices/userAuthSlice.js';
 import { toast } from 'react-toastify';
-// const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+
 
 const Login = () => {
   const [Email, setEmail] = useState('');
@@ -18,11 +18,12 @@ const Login = () => {
 
     try{
       const response = await api.post(`/login`, { Email,password });
-      const { userId, name, email } = response.data;
+      const { userId, name, email, token } = response.data;
       dispatch(setCredentials({
         userId,
         name,
-        email
+        email,
+        token
       }))
       toast.success("Logged in successfully!")
       navigate("/")

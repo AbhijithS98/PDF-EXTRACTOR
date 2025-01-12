@@ -16,6 +16,8 @@ const FormPdf = () => {
 
     if(isValid) {
       setFile(selectedFile);
+      
+      
       setError('');
     } else {
       setFile(null);
@@ -30,7 +32,7 @@ const FormPdf = () => {
       setError('Please select a file before submitting !')
       return;
     }
-
+    
     try {
       const result = await submitPdf(file);
       console.log('File uploaded successfully:', result);

@@ -28,16 +28,15 @@ class UserService {
 
     // Generate JWT token for the user
     const token = generateTokens(res,user._id)
-    return user;
+    return {user,token};
   }
-
 
 
 
   async clearCookie(req, res) {
    
     try {
-      res.cookie('AccessJwt', '', {
+      res.cookie('refreshJwt', '', {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
         sameSite: 'strict',
@@ -47,6 +46,44 @@ class UserService {
     } catch (error) {
       throw new Error('Error clearing cookies');
     }
+  }
+
+
+
+
+  async pdfUpload(req) {
+    
+    const _id = req.user.userId;
+    const User = await UserRepository.findUserById(_id);
+    if (!User) {
+        const error = Error("User not exists");
+        error.name = 'ValidationError';  
+        throw error;
+    }
+  
+    console.log("filepath", req.file?.path);
+    const uploadedFilePath = req.file?.path.replace(/\\/g, "/").replace(/^public\//, "") ?? null;
+    const uploadedFileName = req.file?.originalname;
+    console.log("newpath", uploadedFilePath);
+
+    if (!uploadedFilePath || !uploadedFileName) {
+      const error = new Error("No file uploaded");
+      error.name = "ValidationError";
+      throw error;
+    }
+   
+    const newUploadedFile = {
+    fileName: uploadedFileName,
+    filePath: uploadedFilePath,
+    uploadedAt: new Date(),
+    };
+
+    const updatedUser = await UserRepository.updateUserById(
+      _id,
+      { $push: { "pdfFiles.uploaded": newUploadedFile } }
+    );
+
+    return updatedUser;
   }
 }
 
