@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Document, Page } from 'react-pdf';
+import { toast } from 'react-toastify';
 import "../index.css";
 
 const PDFViewer = ({pdfFile, onExtract}) => {
@@ -7,6 +8,7 @@ const PDFViewer = ({pdfFile, onExtract}) => {
   const [pageNumber, setPageNumber] = useState(1); 
   const [selectedPages, setSelectedPages] = useState([]); 
   const [newPdfName, setNewPdfName] = useState(''); 
+  const inputRef = useRef();
   const scale = 1.5;
 
   // Function to handle when the document is loaded
@@ -25,11 +27,12 @@ const PDFViewer = ({pdfFile, onExtract}) => {
 
   const handleExtract = () => {
     if (selectedPages.length === 0) {
-      alert("Please select at least one page to extract.");
+      toast.error("Please select at least one page to extract.")
       return;
     }
     if (!newPdfName.trim()) {
-      alert("Please enter a name for the new PDF.");
+      toast.error("Please enter a name for the new PDF.")
+      inputRef.current.focus();
       return;
     }
     console.log("Selected pages for extraction:", selectedPages);
@@ -51,12 +54,14 @@ const PDFViewer = ({pdfFile, onExtract}) => {
 
           {/* Input for the new PDF name */}
           <div>
-            <label>Enter new PDF name:</label>
+            <span className='text-danger'>*</span>
+            <label>Enter new PDF name:</label> 
             <input 
+              ref={inputRef}
               type="text"
               value={newPdfName}
               onChange={(e) => setNewPdfName(e.target.value)}
-              placeholder="Enter a name for the new PDF"
+              placeholder=""
             />
           </div>
 
@@ -88,11 +93,7 @@ const PDFViewer = ({pdfFile, onExtract}) => {
           </button>   
         </div>
       )}
-      {!pdfFile && (
-        <div className='text-center mt-5'>
-          <p>No pdf file specified !</p>
-        </div>
-      )}
+      
     </div>
   );
 };

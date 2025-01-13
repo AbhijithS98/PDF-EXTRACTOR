@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 
-const FormPdf = () => {
+const FormPdf = ({listPDFs}) => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate(); 
@@ -38,6 +38,7 @@ const FormPdf = () => {
       console.log('File uploaded successfully:', result);
       toast.success(result.message || "succesfully uploaded")
       setFile(null);
+      listPDFs();
       e.target.reset();
     } catch (uploadError) {
       toast.info('Please login, to upload a file!')

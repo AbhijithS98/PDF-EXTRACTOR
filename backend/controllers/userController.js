@@ -1,9 +1,11 @@
 import UserService from '../services/userService.js';
 import  jwt  from "jsonwebtoken";
 
+
+
 class UserController {
 
-  async register(req, res) {  
+  async register(req, res, next) {  
     try {
       const { name, email, password } = req.body;
       const newUser = await UserService.registerUser({ name,email,password });
@@ -14,12 +16,12 @@ class UserController {
       });
     } catch (err) {
       console.error('Error during registration:', err);
-      res.status(500).send({ message: 'Server Error' });
+      next(err)
     }
   }
 
 
-  async login(req, res) {  
+  async login(req, res, next) {  
     try {
       const { Email, password } = req.body;     
       console.log("hit controler: ", Email,password);
@@ -33,14 +35,14 @@ class UserController {
       });
     } catch (err) {
       console.error('Error during registration:', err);
-      res.status(500).send({ message: 'Server Error' });
+      next(err);
     }
   }
 
 
 
 
-  async logout(req, res ) {
+  async logout(req, res, next) {
   
     try {
       await UserService.clearCookie(req,res);
@@ -48,6 +50,7 @@ class UserController {
 
     } catch (error) {
       console.error('Logout error:', error);
+      next(error);
     }
   }
 
@@ -55,7 +58,7 @@ class UserController {
 
 
 
-  async refreshToken(req, res) {
+  async refreshToken(req, res, next) {
     const refreshToken = req.cookies.refreshJwt;
   
     if (!refreshToken) {
@@ -83,7 +86,7 @@ class UserController {
 
 
 
-  async uploadPdf(req, res) {
+  async uploadPdf(req, res, next) {
     try {     
       
       const user = await UserService.pdfUpload(req);
@@ -95,7 +98,7 @@ class UserController {
 
     } catch (error) {
       console.error("Uploading PDF error: ", error.message);
-      res.status(500).send({ message: 'Server Error' });
+      next(error);
     }
   }
 
@@ -103,9 +106,9 @@ class UserController {
 
 
 
-    async uploadedFiles(req, res) {
+    async fetchAllPdfFiles(req, res, next) {
       try {        
-        const files = await UserService.getUploadedPdfs(req);
+        const files = await UserService.getUploadedAndExtractedPdfs(req);
 
         res.status(200).json({
           message: 'files retrieved successfully',
@@ -114,9 +117,28 @@ class UserController {
 
       } catch (error) {
         console.error("fetching uploaded files error: ", error.message);
-        res.status(500).send({ message: 'Server Error' });
+        next(error);
       }
     }
+
+
+
+
+    async createNewPdf(req, res, next) {
+      try {
+        const relativePath = await UserService.generatePdf(req);
+        const backendUrl = process.env.BACKEND_URL;
+        res.status(200).json({
+          message: "New PDF with extracted pages created successfully.",
+          downloadUrl: `${backendUrl}/${relativePath}`
+        });
+
+      } catch (error) {
+        console.error("Error during PDF extraction:", error.name);
+        next(error);
+      }
+    }
+
 
     
 }

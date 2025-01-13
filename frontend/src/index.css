@@ -54,13 +54,16 @@ h1 {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 80%;
- 
+  max-width: 900px; /* Prevent excessive width on large screens */
+  overflow: hidden; /* Prevent content from spilling out */
+
 }
 
 .pdf-div p {
   text-align: center;
   font-size: 16px;
   font-weight: bold;
+  word-wrap: break-word; /* Prevent text overflow */
 }
 
 .react-pdf__Page {
@@ -73,6 +76,7 @@ h1 {
   border: 1px solid #ddd;
   border-radius: 4px;
   width: 100%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -87,11 +91,14 @@ canvas.react-pdf__Page__canvas {
 .pdf-page-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between; 
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .pdf-page-wrapper label {
   margin-right: 10px;
+  font-size: 14px;
 }
 
 .extract-button {
@@ -102,6 +109,11 @@ canvas.react-pdf__Page__canvas {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  display: block;
+  width: 100%;
+  max-width: 200px; /* Keep the button from becoming too large */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .extract-button:hover {
@@ -123,6 +135,14 @@ canvas.react-pdf__Page__canvas {
   .pdf-div p {
     font-size: 14px; /* Adjust font size for smaller screens */
   }
+
+  .pdf-page-wrapper {
+    justify-content: center;
+  }
+
+  .extract-button {
+    max-width: 150px; /* Shrink button slightly */
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -133,5 +153,19 @@ canvas.react-pdf__Page__canvas {
 
   .pdf-div p {
     font-size: 12px; /* Further reduce font size */
+  }
+
+  .pdf-page-wrapper {
+    flex-direction: column; /* Stack label and checkbox vertically */
+    align-items: center;
+  }
+
+  .pdf-page-wrapper label {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+
+  .extract-button {
+    max-width: 120px;
   }
 }

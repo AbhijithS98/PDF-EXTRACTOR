@@ -5,6 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
+import errorHandler from './middlewares/errorHandler.js';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname,'public')));
 console.log("dirname is:",__dirname);
 
 // app.use('/uploadedPdfs', express.static(path.join(__dirname, '../public/uploadedPdfs')));
+app.use(errorHandler);
 
 app.get('/',(req,res)=>{
   res.send("server readyy")
