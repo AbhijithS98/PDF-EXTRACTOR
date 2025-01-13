@@ -98,6 +98,27 @@ class UserController {
       res.status(500).send({ message: 'Server Error' });
     }
   }
+
+
+
+
+
+    async uploadedFiles(req, res) {
+      try {        
+        const files = await UserService.getUploadedPdfs(req);
+
+        res.status(200).json({
+          message: 'files retrieved successfully',
+          files,
+        });
+
+      } catch (error) {
+        console.error("fetching uploaded files error: ", error.message);
+        res.status(500).send({ message: 'Server Error' });
+      }
+    }
+
+    
 }
 
 

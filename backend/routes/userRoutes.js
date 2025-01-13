@@ -10,6 +10,8 @@ router.post('/login',userController.login);
 router.post('/logout',userController.logout);
 router.post('/refresh-token',userController.refreshToken);
 router.post('/upload',verifyUserToken,uploadPdf,userController.uploadPdf);
+router.get('/uploadedPdfs',verifyUserToken,userController.uploadedFiles);
+// router.post('/extract',verifyUserToken,userController.extractPages);
 // router.post('/upload',verifyUserToken,uploadPdf, (req,res) => {
 //   res.json({ message: 'File uploaded successfully', file: req.file });
 // });

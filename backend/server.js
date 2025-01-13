@@ -30,12 +30,15 @@ app.use(cookieParser());
 
 app.use('/api',userRoutes);
 
-app.use(express.static(path.join(__dirname,'../public')));
+app.use(express.static(path.join(__dirname,'public')));
+// Serve only uploaded PDFs
+console.log("dirname is:",__dirname);
+
+// app.use('/uploadedPdfs', express.static(path.join(__dirname, '../public/uploadedPdfs')));
 
 app.get('/',(req,res)=>{
   res.send("server readyy")
 });
-
 
 
 app.listen(port,()=>{

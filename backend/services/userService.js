@@ -85,6 +85,32 @@ class UserService {
 
     return updatedUser;
   }
+
+
+
+  async getUploadedPdfs(req, res) {
+   
+    try {
+      const _id = req.user.userId;
+      const User = await UserRepository.findUserById(_id);
+      if (!User) {
+        const error = Error("User not exists");
+        error.name = 'ValidationError';  
+        throw error;
+      }
+ 
+      const userDetails = await UserRepository.getUserDetailsById(_id, { "pdfFiles.uploaded": 1 });
+      if (!userDetails || !userDetails.pdfFiles || !userDetails.pdfFiles.uploaded) {
+        return [];
+      }
+
+      return userDetails.pdfFiles.uploaded;
+
+    } catch (error) {
+      console.error("Error fetching uploaded PDF files:", error.message);
+      throw new Error("Failed to fetch uploaded PDF files");
+    }
+  }
 }
 
 

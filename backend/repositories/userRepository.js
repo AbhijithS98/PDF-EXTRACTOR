@@ -32,6 +32,20 @@ class UserRepository {
     }
   }
 
+
+
+  async getUserDetailsById(userId, projection = {}, options = {}) {
+    try {
+      const userDetails = await User.findById(userId, projection, options);
+      if (!userDetails) {
+        throw new Error("User not found");
+      }
+      return userDetails;
+    } catch (error) {
+      console.error("Error fetching user details:", error.message);
+      throw new Error("Failed to fetch user details");
+    }
+  }
 }
 
 export default new UserRepository();
