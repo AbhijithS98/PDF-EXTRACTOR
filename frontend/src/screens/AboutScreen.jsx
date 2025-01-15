@@ -19,7 +19,7 @@ const About = () => {
           <li>Responsive design for a seamless experience across devices.</li>
         </ul>
         <p className="mt-3">
-          <strong>P4PDF</strong> is the perfect tool for students, professionals, and anyone who frequently works with PDF documents. Start simplifying your PDF tasks today!
+          <strong>P4PDF</strong> is the perfect tool for students, professionals, and anyone who frequently works with PDF documents. Start simplifying your PDF tasks today!!
         </p>
       </div>
     </div>
