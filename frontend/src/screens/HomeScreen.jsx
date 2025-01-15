@@ -16,7 +16,6 @@
     const [uploaded,setUploaded] = useState("");
     const [extracted,setExtracted] = useState("");
 
-
     useEffect(()=>{
       if(userInfo){
         console.log("userInfo: ",userInfo);      
@@ -153,4 +152,4 @@
   }
 
 
-  export default HomeScreen;
+export default HomeScreen;
