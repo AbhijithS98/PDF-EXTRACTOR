@@ -18,7 +18,7 @@ const Login = () => {
 
     try{
       const response = await api.post(`/login`, { Email,password });
-      const { userId, name, email, token } = response.data;
+      const { userId, name, email, token } = response?.data;
       dispatch(setCredentials({
         userId,
         name,
@@ -29,7 +29,6 @@ const Login = () => {
       navigate("/")
 
     } catch (error) {
-      toast.error('Login failed. Please try again.');
       console.error('Error during login:', error);
     }
 

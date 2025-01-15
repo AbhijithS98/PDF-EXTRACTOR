@@ -34,7 +34,6 @@ class UserController {
         token
       });
     } catch (err) {
-      console.error('Error during registration:', err);
       next(err);
     }
   }

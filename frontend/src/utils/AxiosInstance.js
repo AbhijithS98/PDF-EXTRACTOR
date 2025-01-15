@@ -2,6 +2,7 @@ import axios from 'axios';
 import store from '../redux/store.js'
 import { setToken, clearCredentials } from '../redux/slices/userAuthSlice.js';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
+import { toast } from "react-toastify";
 
 const api = axios.create({
   baseURL: `${backendURL}/api`,
@@ -67,7 +68,11 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-
+    else if(error.response?.status === 400){
+      console.error('Error intercepted:', error);
+      const errorMessage = error.response?.data?.message || 'Something went wrong';
+      toast.error(errorMessage);
+    }
     return Promise.reject(error);
   }
 );

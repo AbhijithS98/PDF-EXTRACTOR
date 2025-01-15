@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname,'public')));
 // Serve only uploaded PDFs
 console.log("dirname is:",__dirname);
 
-// app.use('/uploadedPdfs', express.static(path.join(__dirname, '../public/uploadedPdfs')));
+
 app.use(errorHandler);
 
 app.get('/',(req,res)=>{
