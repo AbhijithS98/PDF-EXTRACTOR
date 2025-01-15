@@ -3,6 +3,7 @@ import store from '../redux/store.js'
 import { setToken, clearCredentials } from '../redux/slices/userAuthSlice.js';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 import { toast } from "react-toastify";
+console.log('Backend URL:', backendURL);
 
 const api = axios.create({
   baseURL: `${backendURL}/api`,
@@ -12,6 +13,7 @@ const api = axios.create({
   },      
 });
 
+console.log('Axios baseURL:', api.defaults.baseURL);
 
 //request interceptor to attach the access token
 api.interceptors.request.use(
