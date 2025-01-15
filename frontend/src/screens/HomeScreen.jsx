@@ -7,7 +7,6 @@
   import Swal from 'sweetalert2';
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-
   const HomeScreen = () => {
 
     const { userInfo } = useSelector((state) => state.userAuth);
@@ -81,7 +80,7 @@
     };
 
     return (
-      <>
+      <>   
       <div className="text-center mt-5">
         <h2>{`Welcome to PDF extractor ${userInfo? userInfo.name : ''}`}</h2>
         <p>Please upload the PDF file to extract down below !</p> 
