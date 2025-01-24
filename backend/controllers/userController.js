@@ -55,6 +55,39 @@ class UserController {
 
 
 
+  async sendPassResetLink(req, res, next) {
+   
+    try {
+      const {email} = req.body;
+      await UserService.sendResetLink(email);
+      res.status(200).json({ message: 'Reset link send successful' });
+    } catch (error) {
+      console.error('send reset link error:', error.message);
+      next(error)
+    }
+  }
+
+
+
+  
+  async resetPassword(req, res) {
+  
+    try {
+      const {token,password} = req.body;
+      await UserService.resetPass(token,password)
+      res.status(200).json({ message: "Password reset successful, please Login!" });
+
+    } catch (error) {
+
+      if (error.name === 'TokenExpiredError') {
+        return res.status(400).json({ message: 'Reset token has expired.' });
+      }
+      console.error('Error in reset-password:', error);
+      res.status(500).json({ message: 'Server error. Please try again later.' });
+    }
+  }
+
+
 
 
   async refreshToken(req, res, next) {

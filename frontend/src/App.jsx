@@ -7,6 +7,8 @@ import Login from './screens/LoginScreen';
 import Signup from './screens/RegisterScreen';
 import About from './screens/AboutScreen';
 import Contact from './screens/Contact';
+import ForgotPassword from './screens/ForgotPassword';
+import ResetPassword from './screens/ResetPassword';
 import { pdfjs } from 'react-pdf';
 import './App.css'
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -29,6 +31,8 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
       </Routes>
       <ToastContainer />
       <Footer />

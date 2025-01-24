@@ -76,9 +76,12 @@ const Login = () => {
                   </button>
                 </div>
 
-                <div className='text-end mt-4'>
-                 <p className='text-muted'>Don't have an account?  <a href="/signup">Sign up</a></p>                
-                </div>
+                
+            
+                  <div className='d-flex justify-content-between mt-4'>
+                  <a href="/forgot-password">Forgot password ?</a>
+                  <p className='text-muted'>Don't have an account?  <a href="/signup">Sign up</a></p>                             
+                  </div>
                 
               </form>
             </div>

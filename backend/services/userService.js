@@ -1,5 +1,7 @@
 import UserRepository from "../repositories/userRepository.js";
 import generateTokens from "../utils/generateToken.js";
+import sendEmail from "../utils/emailSender.js";
+import  jwt  from "jsonwebtoken";
 import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
@@ -63,6 +65,64 @@ class UserService {
     }
   }
 
+
+
+  async sendResetLink(email) {
+
+    const user = await UserRepository.findUserByEmail(email)
+    if (!user) {
+      const error =  Error('User not found');
+      error.name = 'ValidationError'
+      throw error;
+    }
+
+    const resetToken = jwt.sign(
+      {userId:user._id},
+      process.env.PW_RESET_TOKEN_SECRET,
+      {expiresIn: '10m'}
+    )
+    
+    
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset',
+      html: `<p>You requested a password reset. Click the link below to reset your password:</p>
+             <a href="${resetLink}">Reset Password</a>
+             If you did not request this, please ignore this email.`
+    });
+  }
+
+
+
+  async resetPass(token, password) {
+   
+    if(!token){
+        const error = Error('PW reset Token is not provided');
+        error.name = 'ValidationError';  
+        throw error;
+    }
+
+    try{
+      const decoded = jwt.verify(token, process.env.PW_RESET_TOKEN_SECRET);
+
+      const user = await UserRepository.findUserById(decoded.userId);
+
+      if(!user){
+        const error = Error('Invalid or expired token');
+        error.name = 'ValidationError';  
+        throw error;
+      }
+
+      user.password = password;
+      await user.save();
+
+    } catch (error) {
+
+      throw error;
+    }
+  }
 
 
 
@@ -228,6 +288,9 @@ class UserService {
       throw error
     }
   }
+
+
+
 
 }
 
