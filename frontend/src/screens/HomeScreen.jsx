@@ -15,6 +15,10 @@
     const [uploaded,setUploaded] = useState("");
     const [extracted,setExtracted] = useState("");
 
+    const [uploadedPage, setUploadedPage] = useState(1);
+    const [extractedPage, setExtractedPage] = useState(1);
+    const itemsPerPage = 5;
+
     useEffect(()=>{
       if(userInfo){
         console.log("userInfo: ",userInfo);      
@@ -50,7 +54,7 @@
         console.log("extraction response: ",response);
         const downloadUrl = response.data.downloadUrl;
 
-        // Show SweetAlert with the download link
+// Show SweetAlert with the download link
         Swal.fire({
           title: "Extraction Successful!",
           html: `
@@ -79,6 +83,15 @@
       }
     };
 
+
+// Pagination Logic
+    const paginate = (array, page) => {
+      const startIndex = (page - 1) * itemsPerPage;
+      return array.slice(startIndex, startIndex + itemsPerPage);
+    };
+
+    const totalPages = (array) => Math.ceil(array.length / itemsPerPage);
+
     return (
       <>   
       <div className="text-center mt-5">
@@ -93,7 +106,7 @@
             <h3 className="mt-5 text-center">Extracted Files</h3>
             {extracted.length > 0 ? (
               <div className="d-flex flex-wrap justify-content-center gap-3 mt-3">
-                {extracted.map((file, index) => (
+                {paginate(extracted,extractedPage).map((file, index) => (
                   <div
                     key={index}
                     className="card p-3 shadow-sm"
@@ -118,13 +131,35 @@
             ) : (
               <p className="text-center mt-3">No extracted files available yet.</p>
             )}
+
+{/* Pagination Controls */}
+            {extracted.length > itemsPerPage && (
+              <div className="pagination-controls text-center mt-3">
+                <button
+                  className="btn btn-primary"
+                  disabled={extractedPage === 1}
+                  onClick={() => setExtractedPage((prev) => prev - 1)}
+                >
+                  Previous
+                </button>
+                <span className="mx-3">{`Page ${extractedPage} of ${totalPages(extracted)}`}</span>
+                <button
+                  className="btn btn-primary"
+                  disabled={extractedPage === totalPages(extracted)}
+                  onClick={() => setExtractedPage((prev) => prev + 1)}
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
 
+{/* Uploaded Files */}
           <div className="pdf-list-container">
             <h3 className="mt-5 text-center">Uploaded Files</h3>
             {uploaded.length > 0 ? (
               <ul className="list-group mt-3">
-                {uploaded.map((file, index) => (
+                {paginate(uploaded,uploadedPage).map((file, index) => (
                   <li
                     key={index}
                     className="list-group-item d-flex justify-content-between align-items-center"
@@ -141,6 +176,27 @@
               </ul>
             ) : (
               <p className="text-center">No files uploaded yet.</p>
+            )}
+
+{/* Pagination Controls */}
+            {uploaded.length > itemsPerPage && (
+              <div className="pagination-controls text-center mt-3">
+                <button
+                  className="btn btn-primary"
+                  disabled={uploadedPage === 1}
+                  onClick={() => setUploadedPage((prev) => prev - 1)}
+                >
+                  Previous
+                </button>
+                <span className="mx-3">{`Page ${uploadedPage} of ${totalPages(uploaded)}`}</span>
+                <button
+                  className="btn btn-primary"
+                  disabled={uploadedPage === totalPages(uploaded)}
+                  onClick={() => setUploadedPage((prev) => prev + 1)}
+                >
+                  Next
+                </button>
+              </div>
             )}
           </div>
        </>

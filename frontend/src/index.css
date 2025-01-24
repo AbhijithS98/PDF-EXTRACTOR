@@ -124,6 +124,41 @@ canvas.react-pdf__Page__canvas {
 
 
 
+/* Overview page Design */
+.overview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.overview-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+}
+
+.reorder-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.reorder-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reorder-button:hover {
+  background-color: #0056b3;
+}
+
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {

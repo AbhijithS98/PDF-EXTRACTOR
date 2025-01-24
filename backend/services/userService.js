@@ -130,11 +130,13 @@ class UserService {
       }
 
       const uploadedFiles = userDetails.pdfFiles.uploaded || [];
+      const sortedUF = uploadedFiles.sort((a,b)=> new Date(b.uploadedAt) - new Date(a.uploadedAt));
       const extractedFiles = userDetails.pdfFiles.extracted || [];
+      const sortedEF = extractedFiles.sort((a,b)=> new Date(b.extractedAt) - new Date(a.extractedAt));
 
       return {
-        uploaded: uploadedFiles,
-        extracted: extractedFiles
+        uploaded: sortedUF,
+        extracted: sortedEF
       };
 
     } catch (error) {
