@@ -6,6 +6,7 @@
   import { toast } from "react-toastify";
   import Swal from 'sweetalert2';
   const backendURL = import.meta.env.VITE_BACKEND_URL;
+  import './home.css';
 
   const HomeScreen = () => {
 
@@ -93,8 +94,10 @@
     const totalPages = (array) => Math.ceil(array.length / itemsPerPage);
 
     return (
-      <>   
-      <div className="text-center mt-5">
+        
+      <div className="main-container">
+      <div className="content">
+      <div className="text-center mt-5 p-5">
         <h2>{`Welcome to PDF extractor ${userInfo? userInfo.name : ''}`}</h2>
         <p>Please upload the PDF file to extract down below !</p> 
       </div>
@@ -199,10 +202,13 @@
               </div>
             )}
           </div>
+          
        </>
        )}   
       <PDFViewer pdfFile={fileUrl} onExtract={handleExtractPages}/>
-      </>
+      </div>
+      </div>
+     
     )
   }
 
