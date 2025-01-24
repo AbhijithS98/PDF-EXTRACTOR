@@ -106,7 +106,7 @@ const Signup = () => {
               />
             </div>
             <div className="d-grid">
-              <button type="submit" className="btn btn-primary">Signup</button>
+              <button type="submit" className="btn btn-dark">Signup</button>
             </div>
             <div className='text-end mt-4'>
                  <p className='text-muted'>Already a user?  <a href="/login">Sign in</a></p>                

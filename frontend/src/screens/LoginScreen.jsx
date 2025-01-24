@@ -40,7 +40,7 @@ const Login = () => {
         <div className="col-md-6">
           <div className="card shadow">
             <div className="card-body">
-              <h3 className="text-center mb-4">Login</h3>
+              <h3 className="text-center mb-4">Login to your account</h3>
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
@@ -71,7 +71,7 @@ const Login = () => {
                   />
                 </div>
                 <div className="d-grid">
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="btn btn-dark">
                     Login
                   </button>
                 </div>
@@ -79,8 +79,8 @@ const Login = () => {
                 
             
                   <div className='d-flex justify-content-between mt-4'>
-                  <a href="/forgot-password">Forgot password ?</a>
-                  <p className='text-muted'>Don't have an account?  <a href="/signup">Sign up</a></p>                             
+                  <a href="/forgot-password" className='text-danger'>Forgot your password ?</a>
+                  <p className='text-muted'>Don't have an account?  <a href="/signup" className='text-danger'>Sign up</a></p>                             
                   </div>
                 
               </form>

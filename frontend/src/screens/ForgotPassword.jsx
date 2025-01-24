@@ -50,7 +50,7 @@ const ForgotPassword = () => {
               </div>
               <button
                 type="submit"
-                className="btn btn-primary w-100"
+                className="btn btn-dark w-100"
                 disabled={loading}
               >
                 {loading ? "Sending..." : "Send Reset Link"}
