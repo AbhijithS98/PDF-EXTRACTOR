@@ -3,6 +3,7 @@ import generateTokens from "../utils/generateToken.js";
 import sendEmail from "../utils/emailSender.js";
 import  jwt  from "jsonwebtoken";
 import { PDFDocument } from 'pdf-lib';
+import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -43,8 +44,14 @@ class UserService {
     }
 
     // Generate JWT token for the user
-    const token = generateTokens(res,user._id)
-    return {user,token};
+    const { accessToken, refreshToken } = generateTokens(res, user._id);
+    
+    // Hash and store the refresh token
+    const salt = await bcrypt.genSalt(10);
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
+    await UserRepository.updateUserById(user._id, { refreshToken: hashedRefreshToken });
+
+    return {user}; // Don't return tokens
   }
 
 
@@ -52,10 +59,22 @@ class UserService {
   async clearCookie(req, res) {
    
     try {
+      if (req.user && req.user.userId) {
+        // Remove the refresh token from the database
+        await UserRepository.updateUserById(req.user.userId, { refreshToken: null });
+      }
+
+      res.cookie('accessToken', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict',
+        expires: new Date(0),
+      });
+
       res.cookie('refreshJwt', '', {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict',
         expires: new Date(0),  
       });
 
@@ -63,6 +82,40 @@ class UserService {
       error.name = 'ValidationError';  
       throw error;
     }
+  }
+
+
+
+  async refreshAccessToken(refreshToken, res) {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = await UserRepository.findUserById(decoded.userId);
+
+    if (!user || !user.refreshToken) {
+      const error = Error('Invalid refresh token');
+      error.name = 'ValidationError';
+      throw error;
+    }
+
+    const isMatch = await bcrypt.compare(refreshToken, user.refreshToken);
+    if (!isMatch) {
+      const error = Error('Invalid refresh token');
+      error.name = 'ValidationError';
+      throw error;
+    }
+
+    // Generate new access token
+    const accessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: '10m',
+    });
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 10 * 60 * 1000, // 10 minutes
+    });
+
+    return accessToken;
   }
 
 

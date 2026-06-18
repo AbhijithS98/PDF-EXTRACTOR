@@ -25,13 +25,12 @@ class UserController {
     try {
       const { Email, password } = req.body;     
       console.log("hit controler: ", Email,password);
-      const {user,token} = await UserService.loginUser( Email,password,res );
+      const {user} = await UserService.loginUser( Email,password,res );
       
       res.status(201).json({
         userId: user._id,
         name: user.name,
-        email: user.email,
-        token
+        email: user.email
       });
     } catch (err) {
       next(err);
@@ -100,14 +99,11 @@ class UserController {
     } 
   
     try {
-      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-      const accessToken = jwt.sign({ userId: decoded.userId }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '10m',
-      });
+      await UserService.refreshAccessToken(refreshToken, res);
       
       console.log("refreshed access token");
       
-      res.json({ accessToken });
+      res.status(200).json({ message: 'Access token refreshed successfully' });
     } catch (error) {
       console.error('Refresh token error:', error.message);
       await UserService.clearCookie(req,res);

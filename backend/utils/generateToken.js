@@ -11,14 +11,21 @@ const generateTokens = (res, userId) => {
     expiresIn: '1d',
   });
 
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict',
+    maxAge: 10 * 60 * 1000, // 10 minutes
+  });
+
   res.cookie('refreshJwt', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV ==='production',  
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    sameSite: 'Strict',
     maxAge: 1 * 24 * 60 * 60 * 1000,  // 1 day in milliseconds
   });
   
-  return accessToken;
+  return { accessToken, refreshToken };
 }
 
 export default generateTokens;  

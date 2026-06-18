@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from '../redux/store.js'
-import { setToken, clearCredentials } from '../redux/slices/userAuthSlice.js';
+import { clearCredentials } from '../redux/slices/userAuthSlice.js';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 import { toast } from "react-toastify";
 console.log('Backend URL:', backendURL);
@@ -14,24 +14,6 @@ const api = axios.create({
 });
 
 console.log('Axios baseURL:', api.defaults.baseURL);
-
-//request interceptor to attach the access token
-api.interceptors.request.use(
-  (config) => {
-    const state = store.getState();
-    const token = state.userAuth?.userInfo?.token;
-    
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-
 
 //response interceptor for handling token expiration
 api.interceptors.response.use(
@@ -50,18 +32,13 @@ api.interceptors.response.use(
         // Trigger the refresh token API
         console.log("triggering refresh ");
         
-        const refreshResponse = await axios.post(
+        await axios.post(
           `${backendURL}/api/refresh-token`, 
           {},
           { withCredentials: true } 
         );
 
-        const { accessToken } = refreshResponse.data;
-
-        store.dispatch(setToken(accessToken));
-
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-
+        // Cookies are set automatically, retry request
         return api(originalRequest);
 
       } catch (refreshError) {
